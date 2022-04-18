@@ -10,16 +10,21 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.apitest.models.UrlModel;
+
 
 
 @Repository
 public class UrlRepository {
+	
+	ArrayList<UrlModel> urlCollection = new ArrayList<UrlModel>();
 	 
 	public UrlRepository() throws Throwable {
 		String link = "https://raw.githubusercontent.com/EvanLi/Github-Ranking/master/Data/github-ranking-2018-12-18.csv";
@@ -28,11 +33,58 @@ public class UrlRepository {
         BufferedReader in = new BufferedReader( new InputStreamReader(urlFile.openStream()));
 
         String inputLine;
+        int a = 1;
+        
+        boolean header = true;
+        
         while ((inputLine = in.readLine()) != null)
             
-        	//mepear a objeto
-        	System.out.println(inputLine);
+        	if (header) {
+        		header = false;
+        	}else {
+        		
+		        	//mepear a objeto
+		        		
+		        		String[] parsedLine = inputLine.split(",");
+		        		
+		        		UrlModel urldata = new UrlModel();
+		        		
+		        		urldata.setRank(Integer.parseInt(parsedLine[0]));
+		        		urldata.setItem(parsedLine[1]);
+		        		urldata.setRepo_name(parsedLine[2]);
+		        		urldata.setStars(Integer.parseInt(parsedLine[3]));
+		        		
+		        		this.urlCollection.add(urldata);
+
+		        		/*
+		        		rank,item,repo_name,stars,forks,language,repo_url,username,issues,last_commit,description
+		        		Integer rank;
+		        		String item;
+		        		String repo_name;
+		        		Integer stars;
+		        		Integer forks;
+		        		String language;
+		        		String repo_url;
+		        		String username;
+		        		String issues;
+		        		String last_commit;
+		        		String description;
+		        		*/
+		        		
+		        		System.out.println(parsedLine[1]);
+		        		
+		        		a=2;
+        	}
+              
         in.close();
+	}
+	
+	public ArrayList<UrlModel> getUrlCollection() {
+		return urlCollection;
+	}
+
+	public void setUrlCollection(ArrayList<UrlModel> urlCollection) {
+		this.urlCollection = urlCollection;
 	}
  
 }
