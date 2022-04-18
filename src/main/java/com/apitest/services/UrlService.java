@@ -15,10 +15,8 @@ public class UrlService {
 	@Autowired
 	UrlRepository urlRepository;
 	
-	public ArrayList<UrlModel> getUlsByParams(Long num, String lang) {
-		// TODO Auto-generated method stub
-		
-		return null;
+	public ArrayList<UrlModel> getUlsByParams(Integer num, String lang) {
+		return urlRepository.getSortedFilteredUrlCollection(num, lang);
 	}
 	
 }

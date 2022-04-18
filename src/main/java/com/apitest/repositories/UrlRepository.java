@@ -11,9 +11,12 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +27,7 @@ import com.apitest.models.UrlModel;
 @Repository
 public class UrlRepository {
 	
-	ArrayList<UrlModel> urlCollection = new ArrayList<UrlModel>();
+	static ArrayList<UrlModel> urlCollection = new ArrayList<UrlModel>();
 	 
 	public UrlRepository() throws Throwable {
 		String link = "https://raw.githubusercontent.com/EvanLi/Github-Ranking/master/Data/github-ranking-2018-12-18.csv";
@@ -71,9 +74,8 @@ public class UrlRepository {
 		        		String description;
 		        		*/
 		        		
-		        		System.out.println(parsedLine[1]);
+		        		System.out.println(urldata.toString());
 		        		
-		        		a=2;
         	}
               
         in.close();
@@ -81,6 +83,27 @@ public class UrlRepository {
 	
 	public ArrayList<UrlModel> getUrlCollection() {
 		return urlCollection;
+	}
+	
+	public static ArrayList<UrlModel> getSortedFilteredUrlCollection(Integer num, String lang) {
+		
+		ArrayList<UrlModel> filteredUrlCol = new ArrayList<UrlModel>();
+		
+		for (Iterator iterator = urlCollection.iterator(); iterator.hasNext();) {
+			
+			UrlModel urlModel = (UrlModel) iterator.next();
+			
+			if (urlModel.getLanguage() == lang) {
+				filteredUrlCol.add(urlModel);
+			}
+			
+		}
+		
+		//Comparator<UrlModel> rankComparator = Comparator.comparing(UrlModel::getRank);
+		
+		return (ArrayList<UrlModel>) filteredUrlCol.stream()
+	            .limit(num)
+	            .collect(Collectors.toList());
 	}
 
 	public void setUrlCollection(ArrayList<UrlModel> urlCollection) {

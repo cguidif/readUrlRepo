@@ -83,5 +83,8 @@ public class UrlModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public String toString() {
+		return this.rank + " - " + this.item + " - "  + this.repo_name + " - "  + this.stars;
+	}
 
 }
