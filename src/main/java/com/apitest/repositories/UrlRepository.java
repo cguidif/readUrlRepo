@@ -25,11 +25,14 @@ public class UrlRepository {
 		String link = "https://raw.githubusercontent.com/EvanLi/Github-Ranking/master/Data/github-ranking-2018-12-18.csv";
 		URL urlFile = new URL(link);
 		
-		BufferedReader bufRdr = new BufferedReader(urlFile.toStream());
-		String line = null;
+        BufferedReader in = new BufferedReader( new InputStreamReader(urlFile.openStream()));
 
-
-		System.out.println(crunchifyResponse);
+        String inputLine;
+        while ((inputLine = in.readLine()) != null)
+            
+        	//mepear a objeto
+        	System.out.println(inputLine);
+        in.close();
 	}
  
 }
