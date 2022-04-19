@@ -1,22 +1,9 @@
 package com.apitest.repositories;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +14,7 @@ import com.apitest.models.UrlModel;
 @Repository
 public class UrlRepository {
 	
-	static ArrayList<UrlModel> urlCollection = new ArrayList<UrlModel>();
+	ArrayList<UrlModel> urlCollection = new ArrayList<UrlModel>();
 	 
 	public UrlRepository() throws Throwable {
 		String link = "https://raw.githubusercontent.com/EvanLi/Github-Ranking/master/Data/github-ranking-2018-12-18.csv";
@@ -35,75 +22,39 @@ public class UrlRepository {
 		
         BufferedReader in = new BufferedReader( new InputStreamReader(urlFile.openStream()));
 
-        String inputLine;
-        int a = 1;
-        
+        String inputLine;       
         boolean header = true;
         
         while ((inputLine = in.readLine()) != null)
             
         	if (header) {
         		header = false;
-        	}else {
-        		
-		        	//mepear a objeto
-		        		
+        	}else {  		
 		        		String[] parsedLine = inputLine.split(",");
-		        		
 		        		UrlModel urldata = new UrlModel();
 		        		
 		        		urldata.setRank(Integer.parseInt(parsedLine[0]));
 		        		urldata.setItem(parsedLine[1]);
 		        		urldata.setRepo_name(parsedLine[2]);
 		        		urldata.setStars(Integer.parseInt(parsedLine[3]));
-		        		
-		        		this.urlCollection.add(urldata);
+		        		urldata.setForks(Integer.parseInt(parsedLine[4]));
+		        		urldata.setLanguage((parsedLine[5].equals(null)?"-":parsedLine[5]));
+		        		urldata.setRepo_url(parsedLine[6]);
+		        		urldata.setUsername(parsedLine[7]);
+		        		urldata.setIssues(Integer.parseInt(parsedLine[8]));
+		        		urldata.setLast_commit(parsedLine[9]);
+		        		//urldata.setDescription((parsedLine[10].equals(null)?"-":parsedLine[10]));
 
-		        		/*
-		        		rank,item,repo_name,stars,forks,language,repo_url,username,issues,last_commit,description
-		        		Integer rank;
-		        		String item;
-		        		String repo_name;
-		        		Integer stars;
-		        		Integer forks;
-		        		String language;
-		        		String repo_url;
-		        		String username;
-		        		String issues;
-		        		String last_commit;
-		        		String description;
-		        		*/
-		        		
-		        		System.out.println(urldata.toString());
-		        		
+		        		this.urlCollection.add(urldata);
+	        		
+		        		//System.out.println(urldata.toString());
         	}
               
         in.close();
 	}
-	
+		
 	public ArrayList<UrlModel> getUrlCollection() {
 		return urlCollection;
-	}
-	
-	public static ArrayList<UrlModel> getSortedFilteredUrlCollection(Integer num, String lang) {
-		
-		ArrayList<UrlModel> filteredUrlCol = new ArrayList<UrlModel>();
-		
-		for (Iterator iterator = urlCollection.iterator(); iterator.hasNext();) {
-			
-			UrlModel urlModel = (UrlModel) iterator.next();
-			
-			if (urlModel.getLanguage() == lang) {
-				filteredUrlCol.add(urlModel);
-			}
-			
-		}
-		
-		//Comparator<UrlModel> rankComparator = Comparator.comparing(UrlModel::getRank);
-		
-		return (ArrayList<UrlModel>) filteredUrlCol.stream()
-	            .limit(num)
-	            .collect(Collectors.toList());
 	}
 
 	public void setUrlCollection(ArrayList<UrlModel> urlCollection) {
@@ -111,52 +62,3 @@ public class UrlRepository {
 	}
  
 }
-
-
-/*
-@Repository
-public class UrlRepository {
-	 
-	public UrlRepository() throws Throwable {
-		String link = "https://raw.githubusercontent.com/EvanLi/Github-Ranking/master/Data/github-ranking-2018-12-18.csv";
-		URL crunchifyUrl = new URL(link);
-		HttpURLConnection crunchifyHttp = (HttpURLConnection) crunchifyUrl.openConnection();
-		Map<String, List<String>> crunchifyHeader = crunchifyHttp.getHeaderFields();
- 
-		// If URL is getting 301 and 302 redirection HTTP code then get new URL link.
-		// This below for loop is totally optional if you are sure that your URL is not getting redirected to anywhere
-		for (String header : crunchifyHeader.get(null)) {
-			if (header.contains(" 302 ") || header.contains(" 301 ")) {
-				link = crunchifyHeader.get("Location").get(0);
-				crunchifyUrl = new URL(link);
-				crunchifyHttp = (HttpURLConnection) crunchifyUrl.openConnection();
-				crunchifyHeader = crunchifyHttp.getHeaderFields();
-			}
-		}
-		InputStream crunchifyStream = crunchifyHttp.getInputStream();
-		String crunchifyResponse = crunchifyGetStringFromStream(crunchifyStream);
-		System.out.println(crunchifyResponse);
-	}
- 
-        // ConvertStreamToString() Utility - we name it as crunchifyGetStringFromStream()
-	private static String crunchifyGetStringFromStream(InputStream crunchifyStream) throws IOException {
-		if (crunchifyStream != null) {
-			Writer crunchifyWriter = new StringWriter();
- 
-			char[] crunchifyBuffer = new char[2048];
-			try {
-				Reader crunchifyReader = new BufferedReader(new InputStreamReader(crunchifyStream, "UTF-8"));
-				int counter;
-				while ((counter = crunchifyReader.read(crunchifyBuffer)) != -1) {
-					crunchifyWriter.write(crunchifyBuffer, 0, counter);
-				}
-			} finally {
-				crunchifyStream.close();
-			}
-			return crunchifyWriter.toString();
-		} else {
-			return "No Contents";
-		}
-	}
-}
-*/

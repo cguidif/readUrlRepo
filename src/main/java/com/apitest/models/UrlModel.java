@@ -2,8 +2,6 @@ package com.apitest.models;
 
 public class UrlModel {
 	
-	
-	
 	Integer rank;
 	String item;
 	String repo_name;
@@ -12,7 +10,7 @@ public class UrlModel {
 	String language;
 	String repo_url;
 	String username;
-	String issues;
+	Integer issues;
 	String last_commit;
 	String description;
 
@@ -65,10 +63,10 @@ public class UrlModel {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public String getIssues() {
+	public Integer getIssues() {
 		return issues;
 	}
-	public void setIssues(String issues) {
+	public void setIssues(Integer issues) {
 		this.issues = issues;
 	}
 	public String getLast_commit() {
@@ -84,7 +82,18 @@ public class UrlModel {
 		this.description = description;
 	}
 	public String toString() {
-		return this.rank + " - " + this.item + " - "  + this.repo_name + " - "  + this.stars;
+		return 
+			this.rank+ ", " +
+			this.item+ ", " +
+			this.repo_name+ ", " +
+			this.stars+ ", " +
+			this.forks+ ", " +
+			this.language+ ", " +
+			this.repo_url+ ", " +
+			this.username+ ", " +
+			this.issues+ ", " +
+			this.last_commit+ ", " +
+			this.description;
 	}
 
 }
